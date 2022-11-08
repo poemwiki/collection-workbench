@@ -28,7 +28,7 @@ def upload(poems: List[Poem]):
         "Accept": "application/json",
         "Authorization": "Bearer {}".format(auth),
     }
-    poem_dict: List[dict] = map(lambda p: p.to_dict(), poems)
+    poem_dict: List[dict] = list(map(lambda p: p.to_dict(), poems))
     res: Response = post(
         "https://poemwiki.org/api/v1/poem/import",
         headers=headers,
@@ -36,4 +36,9 @@ def upload(poems: List[Poem]):
     )
     status_code = res.status_code
     if res.status_code != 200:
-        raise Exception("Failed with status {}".format(status_code))
+        raise Exception(
+            "Failed with status {}, content={}".format(status_code, res.content)
+        )
+    else:
+        uploaded = json.dumps(list(map(lambda p: p.title, poems)))
+        print("upload: {}".format(uploaded))
