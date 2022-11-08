@@ -15,8 +15,13 @@ class Poem:
     def to_dict(self) -> dict:
         return {"title": self.title, "poet": self.poet, "poem": self.content}
 
+    def __str__(self) -> str:
+        return json.dumps(self.to_dict())
+
 
 def upload(poems: List[Poem]):
+    if not poems or not len(poems):
+        pass
     auth = get_auth()
     headers = {
         "Content-Type": "application/json",
